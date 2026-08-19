@@ -32,7 +32,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:3000",
-        "https://dm-coral-chi.vercel.app",
+        "https://instabot-sand.vercel.app/",
     ],
     allow_credentials=True,
     allow_methods=["*"],
