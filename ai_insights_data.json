@@ -1,0 +1,26 @@
+{
+  "memory_boxes": {
+    "biz1": {
+      "business_id": "biz1",
+      "business_name": "My Business",
+      "products": [],
+      "services": [],
+      "target_customers": null,
+      "brand_voice": null,
+      "offers": [],
+      "discounts": [],
+      "promotions": [],
+      "faqs": [],
+      "shipping_policy": null,
+      "return_policy": null,
+      "competitors": [],
+      "goals": [],
+      "customer_pain_points": [],
+      "common_questions": [],
+      "keywords": [],
+      "business_rules": [],
+      "updated_at": "2026-08-11T02:52:59.734471"
+    }
+  },
+  "insights": {}
+}

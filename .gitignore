@@ -1,0 +1,32 @@
+# Next.js
+am/node_modules/
+am/.next/
+am/out/
+am/.vercel/
+# Python
+# =========================
+__pycache__/
+*.py[cod]
+*$py.class
+
+.env/
+venv/
+env/
+ENV/
+
+# =========================
+# Python tools
+# =========================
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Typescript
+am/*.tsbuildinfo
+
+# npm
+am/npm-debug.log*
+am/yarn-debug.log*
+am/yarn-error.log*
