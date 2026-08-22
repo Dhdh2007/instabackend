@@ -47,11 +47,27 @@ def create_campaign(
     user_id: str = Depends(verify_jwt_and_get_user_id),
     db: Client = Depends(get_supabase_admin_client),
 ):
+    profile_res = (
+        db.table("profiles")
+        .select("instagram_account_id")
+        .eq("id", user_id)
+        .maybe_single()
+        .execute()
+    )
+    instagram_account_id = profile_res.data.get("instagram_account_id") if profile_res.data else None
+
+    if not instagram_account_id:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Link an Instagram account before creating a campaign.",
+        )
+
     result = (
         db.table("campaigns")
         .insert(
             {
                 "user_id": user_id,
+                "instagram_account_id": instagram_account_id,
                 "trigger_word": payload.trigger_word.strip().lower(),
                 "destination_link": str(payload.destination_link),
                 "message_template": payload.message_template,
