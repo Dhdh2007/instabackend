@@ -9,7 +9,7 @@ from app.supabase_client import supabase
 
 
 router = APIRouter()
-BACKEND_URL = os.getenv("BACKEND_URL", "http://localhost:8000")
+BACKEND_URL = os.getenv("https://instabackend-m7wv.onrender.com")
 
 
 # Signup request data
@@ -69,7 +69,7 @@ async def signup(data: Signup):
                 "email": data.email,
                 "password": data.password,
                 "options": { 
-                    "email_redirect_to": f"{BACKEND_URL}/auth"
+                    "email_redirect_to": f"{BACKEND_URL}/auth/confirm"
                 }
 
             }
