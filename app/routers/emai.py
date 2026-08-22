@@ -18,7 +18,7 @@ from app.supabase_client import supabase
 
 router = APIRouter()
 
-FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:3000")
+FRONTEND_URL = os.getenv("FRONTEND_URL", "https://instabot-sand.vercel.app")
 
 
 @router.get("/auth/confirm")
