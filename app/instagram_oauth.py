@@ -31,7 +31,7 @@ router = APIRouter(prefix="/api/instagram/oauth", tags=["instagram-oauth"])
 
 # Note the different hosts: authorization + short-lived token exchange use
 # api.instagram.com, everything AFTER you have a token uses graph.instagram.com.
-INSTAGRAM_OAUTH_DIALOG = "https://api.instagram.com/oauth/authorize"
+INSTAGRAM_OAUTH_DIALOG = "https://www.instagram.com/oauth/authorize"
 INSTAGRAM_TOKEN_EXCHANGE = "https://api.instagram.com/oauth/access_token"
 INSTAGRAM_LONG_LIVED_EXCHANGE = "https://graph.instagram.com/access_token"
 INSTAGRAM_GRAPH = "https://graph.instagram.com/v21.0"
