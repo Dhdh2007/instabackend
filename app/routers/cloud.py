@@ -39,8 +39,8 @@ async def signup(data: Signup):
     # Convert Cloudflare response to JSON
     result = response.json()
 
-    print("CLOUDFLARE RESPONSE:")
-    print(result)
+    # print("CLOUDFLARE RESPONSE:")
+    # print(result)
 
 
     # ==========================================
@@ -80,10 +80,10 @@ async def signup(data: Signup):
         # 4. PRINT SUPABASE RESPONSE
         # ==========================================
 
-        print("====================================")
-        print("SUPABASE SIGNUP RESPONSE:")
-        print(signup_response)
-        print("====================================")
+        # print("====================================")
+        # print("SUPABASE SIGNUP RESPONSE:")
+        # print(signup_response)
+        # print("====================================")
 
 
         # ==========================================
@@ -101,12 +101,12 @@ async def signup(data: Signup):
 
     except Exception as e:
 
-        print("====================================")
-        print("SUPABASE SIGNUP ERROR:")
-        print("ERROR TYPE:", type(e))
-        print("ERROR REPR:", repr(e))
-        print("ERROR MESSAGE:", str(e))
-        print("====================================")
+        # print("====================================")
+        # print("SUPABASE SIGNUP ERROR:")
+        # print("ERROR TYPE:", type(e))
+        # print("ERROR REPR:", repr(e))
+        # print("ERROR MESSAGE:", str(e))
+        # print("====================================")
 
 
         raise HTTPException(

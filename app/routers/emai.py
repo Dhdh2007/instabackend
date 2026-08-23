@@ -76,7 +76,7 @@ async def confirm_email(request: Request):
     # 4. EXPIRED / INVALID LINK
     # ==========================================
     except Exception as e:
-        print("LINK VERIFY ERROR:", repr(e))
+        # print("LINK VERIFY ERROR:", repr(e))
         return RedirectResponse(
             url=f"{FRONTEND_URL}/signup?error=invalid_or_expired"
         )

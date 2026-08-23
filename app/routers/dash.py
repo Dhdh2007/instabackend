@@ -129,9 +129,9 @@ def update_campaign(
         .eq("user_id", user_id)
         .execute()
     )
-    print("CAMPAIGN INSERT status:", result.status_code)
-    print("CAMPAIGN INSERT data:", result.data)
-    print("CAMPAIGN INSERT error:", getattr(result, "error", None))
+    # print("CAMPAIGN INSERT status:", result.status_code)
+    # print("CAMPAIGN INSERT data:", result.data)
+    # print("CAMPAIGN INSERT error:", getattr(result, "error", None))
 
     if not result.data:
         raise HTTPException(
