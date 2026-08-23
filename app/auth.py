@@ -75,8 +75,9 @@ def verify_jwt_and_get_user_id(
 
     claims = result.get("claims", {})
     user_id = claims.get("sub")
-
-
+    print("get_claims result keys:", list(result.keys()))
+    print("result:", result)
+    
     if not user_id:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,

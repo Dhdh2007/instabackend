@@ -12,7 +12,33 @@
 -- to create a `public.profiles` table with a 1:1 relationship to auth.users,
 -- linked by the same UUID primary key. This is where WE store app-specific
 -- data like the DM counter and tier.
+
 -- ----------------------------------------------------------------------------
+create table public.campaigns (
+  id uuid not null default gen_random_uuid (),
+  user_id uuid not null,
+  instagram_account_id uuid not null,
+  campaign_name text not null,
+  trigger_word text not null,
+  destination_link text not null,
+  is_active boolean not null default true,
+  created_at timestamp with time zone not null default now(),
+  updated_at timestamp with time zone not null default now(),
+  message_template text null,
+  constraint campaigns_pkey primary key (id),
+  constraint campaigns_instagram_account_id_fkey foreign KEY (instagram_account_id) references instagram_accounts (id) on delete CASCADE,
+  constraint campaigns_user_id_fkey foreign KEY (user_id) references profiles (id) on delete CASCADE
+) TABLESPACE pg_default;
+
+create index IF not exists idx_campaigns_user_id on public.campaigns using btree (user_id) TABLESPACE pg_default;
+
+create index IF not exists idx_campaigns_instagram_account_id on public.campaigns using btree (instagram_account_id) TABLESPACE pg_default;
+
+create index IF not exists idx_campaigns_trigger_lookup on public.campaigns using btree (trigger_word, is_active) TABLESPACE pg_default;
+
+create trigger campaigns_updated_at BEFORE
+update on campaigns for EACH row
+execute FUNCTION update_updated_at ();
 CREATE TABLE public.profiles (
     id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
     email TEXT NOT NULL,
