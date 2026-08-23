@@ -64,7 +64,16 @@ def health_check():
 @app.get("/me")
 def read_me(user=Depends(verify_jwt_and_get_user_id)):
     return {"user": user}
+from fastapi.responses import JSONResponse
+from fastapi.exceptions import RequestValidationError
 
+@app.exception_handler(Exception)
+async def unhandled_exception_handler(request: Request, exc: Exception):
+    logger.exception("Unhandled error on %s %s", request.method, request.url.path)
+    return JSONResponse(
+        status_code=500,
+        content={"detail": "Internal server error."},
+    )
 
 def _match_and_record(payload: InstagramWebhookPayload, db: Client) -> WebhookResult:
     """
