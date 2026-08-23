@@ -68,7 +68,7 @@ def create_campaign(
         .insert(
             {
                 "user_id": user_id,
-                
+                "instagram_account_id": instagram_account_id,
                 "trigger_word": payload.trigger_word.strip().lower(),
                 "destination_link": str(payload.destination_link),
                 "message_template": payload.message_template,
