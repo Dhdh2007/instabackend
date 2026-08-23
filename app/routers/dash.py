@@ -47,17 +47,24 @@ def create_campaign(
     user_id: str = Depends(verify_jwt_and_get_user_id),
     db: Client = Depends(get_supabase_admin_client),
 ):
-    print("user id", user_id)
-    profile_res = (
-        db.table("profiles")
-        .select("instagram_account_id")
-        .eq("id", user_id)
+    # NOTE: campaigns.instagram_account_id is a UUID FK to
+    # instagram_accounts.id — it is NOT the same value as
+    # profiles.instagram_account_id (which stores Meta's raw numeric IG
+    # business account id, e.g. "28090871003838244"). Inserting that raw
+    # id directly into campaigns used to throw:
+    #   invalid input syntax for type uuid: "28090871003838244"
+    # So we look up the instagram_accounts row instead and use its own id.
+    account_res = (
+        db.table("instagram_accounts")
+        .select("id")
+        .eq("user_id", user_id)
+        .eq("is_active", True)
         .maybe_single()
         .execute()
     )
-    instagram_account_id = profile_res.data.get("instagram_account_id") if profile_res.data else None
+    instagram_account_uuid = account_res.data.get("id") if account_res.data else None
 
-    if not instagram_account_id:
+    if not instagram_account_uuid:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Link an Instagram account before creating a campaign.",
@@ -68,7 +75,7 @@ def create_campaign(
         .insert(
             {
                 "user_id": user_id,
-                "instagram_account_id": instagram_account_id,
+                "instagram_account_id": instagram_account_uuid,
                 "trigger_word": payload.trigger_word.strip().lower(),
                 "destination_link": str(payload.destination_link),
                 "message_template": payload.message_template,

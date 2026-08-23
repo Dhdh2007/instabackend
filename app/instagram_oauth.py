@@ -158,6 +158,18 @@ def oauth_callback(
 
     # 4. Save the connection.
     #
+    # IMPORTANT: we write the connection to BOTH tables:
+    #   - profiles.instagram_account_id: Meta's raw numeric IG business
+    #     account id (e.g. "28090871003838244"). This is what incoming
+    #     webhook payloads reference (payload.recipient_account_id), so
+    #     it's what _match_and_record() looks up against.
+    #   - instagram_accounts: a proper row with its own UUID primary key.
+    #     campaigns.instagram_account_id is a UUID FK that points at THIS
+    #     table's id column, not at Meta's raw numeric id. Without this
+    #     upsert, instagram_accounts stays empty and create_campaign() has
+    #     no UUID to insert, which is what was causing:
+    #       invalid input syntax for type uuid: "28090871003838244"
+    #
     # NOTE: facebook_user_id is intentionally left untouched here — this
     # login flow never involves a Facebook account at all, so there's no
     # such ID to save. This means Meta's Data Deletion Callback (which
@@ -165,6 +177,16 @@ def oauth_callback(
     # this flow. Known gap to revisit before real users rely on it — the
     # in-app "Delete my account" button still works fine regardless.
     try:
+        db.table("instagram_accounts").upsert(
+            {
+                "user_id": user_id,
+                "instagram_account_id": ig_account_id,
+                "instagram_access_token": long_lived_token,
+                "is_active": True,
+            },
+            on_conflict="user_id,instagram_account_id",
+        ).execute()
+
         db.table("profiles").update(
             {
                 "instagram_account_id": ig_account_id,
@@ -190,6 +212,9 @@ def disconnect_instagram(
 ):
     """
     Disconnects Instagram without touching campaigns or DM history.
+    Marks the instagram_accounts row inactive rather than deleting it,
+    since campaigns.instagram_account_id is a FK with ON DELETE CASCADE —
+    deleting the row would silently wipe out the user's campaigns too.
     """
     db.table("profiles").update(
         {
@@ -197,6 +222,10 @@ def disconnect_instagram(
             "instagram_access_token": None,
         }
     ).eq("id", user_id).execute()
+
+    db.table("instagram_accounts").update(
+        {"is_active": False}
+    ).eq("user_id", user_id).execute()
 
     return {"status": "disconnected"}
 
