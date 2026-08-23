@@ -1,4 +1,5 @@
 import logging
+import uuid
 from collections import defaultdict
 from datetime import datetime, timedelta, timezone
 from typing import List
@@ -76,6 +77,12 @@ def create_campaign(
             {
                 "user_id": user_id,
                 "instagram_account_id": instagram_account_uuid,
+                # campaigns.campaign_name is NOT NULL but there's no name
+                # field in the UI yet, so it's never actually shown to
+                # users anywhere — just satisfy the constraint with a
+                # random value. Revisit if a real "name this campaign"
+                # input gets added to the create/edit modal later.
+                "campaign_name": str(uuid.uuid4()),
                 "trigger_word": payload.trigger_word.strip().lower(),
                 "destination_link": str(payload.destination_link),
                 "message_template": payload.message_template,
