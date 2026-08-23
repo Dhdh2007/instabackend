@@ -66,13 +66,24 @@ def read_me(user=Depends(verify_jwt_and_get_user_id)):
     return {"user": user}
 from fastapi.responses import JSONResponse
 from fastapi.exceptions import RequestValidationError
+from starlette.middleware.cors import CORSMiddleware
 
+ALLOWED_ORIGINS = {
+    "http://localhost:3000",
+    "https://instabot-sand.vercel.app",
+}
 @app.exception_handler(Exception)
 async def unhandled_exception_handler(request: Request, exc: Exception):
     logger.exception("Unhandled error on %s %s", request.method, request.url.path)
+    origin = request.headers.get("origin")
+    headers = {}
+    if origin in ALLOWED_ORIGINS:
+        headers["Access-Control-Allow-Origin"] = origin
+        headers["Access-Control-Allow-Credentials"] = "true"
     return JSONResponse(
         status_code=500,
         content={"detail": "Internal server error."},
+        headers=headers,
     )
 
 def _match_and_record(payload: InstagramWebhookPayload, db: Client) -> WebhookResult:
