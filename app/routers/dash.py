@@ -76,7 +76,7 @@ def create_campaign(
         .insert(
             {
                 "user_id": user_id,
-                "id": id,
+                
                 "instagram_account_id": instagram_account_uuid,
                 # campaigns.campaign_name is NOT NULL but there's no name
                 # field in the UI yet, so it's never actually shown to
