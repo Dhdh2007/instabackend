@@ -47,7 +47,7 @@ def create_campaign(
     user_id: str = Depends(verify_jwt_and_get_user_id),
     db: Client = Depends(get_supabase_admin_client),
 ):
-    print("user id" user_id)
+    print("user id", user_id)
     profile_res = (
         db.table("profiles")
         .select("instagram_account_id")
